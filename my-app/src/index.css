@@ -18,6 +18,10 @@ body {
     font-size: 24px;
 }
 
-.row {
+.board-row {
    margin-top: -2px;
+}
+
+.square:focus {
+    outline: none;
 }
