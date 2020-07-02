@@ -5,7 +5,7 @@ import './index.css';
 class Square extends React.Component {
   render() {
     return(
-      <button className="square" onClick={() => this.props.onClick()}>
+      <button className="square" onClick={this.props.onClick}>
         {this.props.value}
       </button>
     );
@@ -16,21 +16,41 @@ class Board extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      squares: Array(9).fill(null)
+      squares: Array(9).fill(null),
+      isNext: true
     }
   }
 
   handleClick(i) {
     let squares = this.state.squares.slice();
-    squares[i] = 'X';
-    this.setState({squares: squares})
+    squares[i] = this.state.isNext ? 'X' : 'O';
+    this.setState({
+      squares: squares,
+      isNext: !this.state.isNext
+    });
+  }
+
+  calculateWinner(squares) {
+    let lines = [
+      [0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]
+    ]
+    for(let element of lines) {
+      const [a,b,c] = element;
+      if(squares[a] && squares[a]===squares[b] && squares[b]===squares[c]) {
+        return squares[a];
+      }
+      else {
+        return null;
+      }
+    }
   }
 
   renderSquare(i) {
     return <Square value={this.state.squares[i]} onClick={() => this.handleClick(i)}/>;
   }
   render() {
-    const status = "Next Player: X";
+    let winner = this.calculateWinner(this.state.squares);
+    let status = winner? `Winner is ${winner}`: `Next Player: ${this.state.isNext ? 'X':'O' }`;
     return (
       <div className="board">
         <div>{status}</div>
