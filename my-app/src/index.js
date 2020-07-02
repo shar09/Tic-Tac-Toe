@@ -23,6 +23,9 @@ class Board extends React.Component {
 
   handleClick(i) {
     let squares = this.state.squares.slice();
+    if(this.calculateWinner(squares) || squares[i]) {
+      return;
+    }
     squares[i] = this.state.isNext ? 'X' : 'O';
     this.setState({
       squares: squares,
@@ -39,10 +42,8 @@ class Board extends React.Component {
       if(squares[a] && squares[a]===squares[b] && squares[b]===squares[c]) {
         return squares[a];
       }
-      else {
-        return null;
-      }
     }
+    return null;
   }
 
   renderSquare(i) {
@@ -50,7 +51,7 @@ class Board extends React.Component {
   }
   render() {
     let winner = this.calculateWinner(this.state.squares);
-    let status = winner? `Winner is ${winner}`: `Next Player: ${this.state.isNext ? 'X':'O' }`;
+    let status = winner? `Winner: ${winner}`: `Next Player: ${this.state.isNext ? 'X':'O' }`;
     return (
       <div className="board">
         <div>{status}</div>
